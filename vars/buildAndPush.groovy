@@ -11,15 +11,15 @@ def imageRef(name) {
   return "${imageName}:${tag}"
 }
 
-def buildImage(name) {
-  sh "docker build -t ${imageRef(name)} ."
+def buildImage(name, buildArgs) {
+  sh "docker build -t ${imageRef(name)} ${buildArgs} ."
 }
 
 def pushImage(name) {
   sh "docker push ${imageRef(name)}"
 }
 
-def call(name) {
-  buildImage(name)
+def call(name, buildArgs = "") {
+  buildImage(name, buildArgs)
   pushImage(name)
 }
