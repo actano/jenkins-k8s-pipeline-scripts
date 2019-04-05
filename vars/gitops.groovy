@@ -11,7 +11,7 @@ def imageRef(name) {
   return "${imageName}:${tag}"
 }
 
-def buildImage(name, buildArgs) {
+def buildImage(name, buildArgs = "") {
   sh "docker build -t ${imageRef(name)} ${buildArgs} ."
 }
 
