@@ -1,18 +1,11 @@
 def imageRef(name) {
   String imageName = "${env.DOCKER_REGISTRY}/${env.GOOGLE_PROJECT}/${name}"
-  String tag
-
-  if (env.BRANCH_NAME == "master") {
-    tag = "1.0.0-${env.BUILD_NUMBER}"
-  } else {
-    tag = "${env.BRANCH_NAME}-${env.GIT_COMMIT}"
-  }
-
+  String tag = "${env.BRANCH_NAME}-${env.GIT_COMMIT}"
   return "${imageName}:${tag}"
 }
 
 def buildImage(name, buildArgs = "") {
-  sh "docker build -t ${imageRef(name)} ${buildArgs} ."
+  sh "docker build -t ${imageRef(name)} --build-arg GIT_COMMIT=${env.GIT_COMMIT} ${buildArgs} ."
 }
 
 def pushImage(name) {
