@@ -6,13 +6,13 @@ def withAuth(String secretPath = "secret/rplanx/npmjs.com/rplan-ci", String secr
   ]
 
   wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
+    sh "echo \"//${registry}/:_authToken=\\\${NPM_TOKEN}\" > ~/.npmrc"
     body()
   }
 }
 
 def publish(String registry = "registry.npmjs.org", String secretPath = "secret/rplanx/npmjs.com/rplan-ci", String secretKey = "publish-token") {
   withAuth(secretPath, secretKey) {
-    sh "echo \"//${registry}/:_authToken=\\\${NPM_TOKEN}\" > ~/.npmrc"
     sh "npm publish"
   }
 }
