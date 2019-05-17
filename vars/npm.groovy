@@ -1,4 +1,4 @@
-def withAuth(String secretPath = "registry.npmjs.org", String secretKey = "secret/rplanx/npmjs.com/rplan-ci", Closure body) {
+def withAuth(String secretPath = "secret/rplanx/npmjs.com/rplan-ci", String secretKey = "publish-token", Closure body) {
   def secrets = [
     [$class: 'VaultSecret', path: secretPath, secretValues: [
       [$class: 'VaultSecretValue', envVar: 'NPM_TOKEN', vaultKey: secretKey]
