@@ -6,7 +6,6 @@ def withAuth(String registry = "registry.npmjs.org", String secretPath = "secret
   ]
 
   wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
-    sh "echo \"//${registry}/:_authToken=\\\${NPM_TOKEN}\" > ~/.npmrc"
     body()
   }
 }
