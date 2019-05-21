@@ -26,7 +26,7 @@ def call(String buildStatus = 'STARTED', String channel) {
 
   // Send notifications
   if (channel) {
-    slackSend (channel: channel, colorCode, message: summary)
+    slackSend (channel: channel, color: colorCode, message: summary)
   } else {
     slackSend (color: colorCode, message: summary)
   }
