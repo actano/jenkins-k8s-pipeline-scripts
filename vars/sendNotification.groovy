@@ -3,7 +3,7 @@
 /**
  * Send notifications based on build status string
  */
-def call(String buildStatus = 'STARTED', String channel) {
+def call(String buildStatus = 'STARTED', String channel = '#jenkins') {
   // build status of null means successful
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
 
@@ -25,9 +25,5 @@ def call(String buildStatus = 'STARTED', String channel) {
   }
 
   // Send notifications
-  if (channel) {
-    slackSend (channel: channel, color: colorCode, message: summary)
-  } else {
-    slackSend (color: colorCode, message: summary)
-  }
+  slackSend (channel: channel, color: colorCode, message: summary)
 }
