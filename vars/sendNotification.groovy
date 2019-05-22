@@ -9,7 +9,7 @@ def call(String buildStatus = 'STARTED', String channel = '#jenkins') {
 
   // Default values
   def color = 'RED'
-  def colorCode = '#FF0000'
+  def colorCode = '#A00000'
   def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
   def summary = "${subject} (${env.BUILD_URL})"
   def details = """<p>${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
@@ -21,7 +21,7 @@ def call(String buildStatus = 'STARTED', String channel = '#jenkins') {
     colorCode = '#FFFF00'
   } else if (buildStatus == 'SUCCESS') {
     color = 'GREEN'
-    colorCode = '#00FF00'
+    colorCode = '#55BC91'
   }
 
   // Send notifications
