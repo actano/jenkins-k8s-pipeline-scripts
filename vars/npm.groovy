@@ -9,7 +9,7 @@ def withAuth(String registry = "registry.npmjs.org", String secretPath = "secret
     ]]
   ]
 
-  wrap([$class: 'VaultBuildWrapper', engineVersion: '1', vaultSecrets: secrets]) {
+  wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
     sh "echo \"//${registry}/:_authToken=\\\${NPM_TOKEN}\" > ~/.npmrc"
     body()
     sh "rm ~/.npmrc"
