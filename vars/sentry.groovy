@@ -11,19 +11,15 @@ def createRelease(name) {
     def SENTRY_RELEASE="${env.GIT_COMMIT}"
     def IMAGE_NAME="${gitops.imageRef(name)}"
 
-    // install sentry
-    sh "npm init -y"
-    sh "npm i @sentry/cli"
-
     // create container and get sourcemaps
     sh "docker create --name sourcemaps_data ${IMAGE_NAME}"
     sh "docker cp sourcemaps_data:/opt/actano/rplan/build/client/index.js.map ./index.js.map"
     sh "docker rm sourcemaps_data"
 
     // create release
-    sh "npx sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} new ${SENTRY_RELEASE}"
+    sh "docker run --rm getsentry/sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} new ${SENTRY_RELEASE}"
 
     // upload sourcemaps
-    sh "npx sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} files ${SENTRY_RELEASE} upload-sourcemaps ./index.js.map"
+    sh "docker run --rm  -v index.js.map:/work/index.js.map getsentry/sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} files ${SENTRY_RELEASE} upload-sourcemaps ./index.js.map"
 
 }
