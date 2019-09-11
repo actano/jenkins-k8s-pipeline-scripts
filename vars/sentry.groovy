@@ -21,5 +21,5 @@ def createRelease(name) {
     sh "docker run --rm getsentry/sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} new ${SENTRY_RELEASE}"
 
     // upload sourcemaps
-    sh "docker run --rm  -v index.js.map:/work/index.js.map getsentry/sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} files ${SENTRY_RELEASE} upload-sourcemaps ./index.js.map"
+    sh "docker run --rm  -v ${pwd()}/index.js.map:/work/index.js.map getsentry/sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} files ${SENTRY_RELEASE} upload-sourcemaps ./index.js.map"
 }
