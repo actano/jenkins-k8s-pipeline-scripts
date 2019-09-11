@@ -1,6 +1,7 @@
-
+/**
+ * Creates a Sentry release and uploads the sourcemaps
+ */
 def createRelease(name) {
-
     // vault
     // todo get from vault
     def SENTRY_API_KEY="4e6e8ebddbe94465989b3f4efe801a355db70615472549399446e52807b759c5"
@@ -21,5 +22,4 @@ def createRelease(name) {
 
     // upload sourcemaps
     sh "docker run --rm  -v index.js.map:/work/index.js.map getsentry/sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} files ${SENTRY_RELEASE} upload-sourcemaps ./index.js.map"
-
 }
