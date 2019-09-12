@@ -4,20 +4,17 @@
 def createRelease(name) {
     // TODO Integrate after test was successful
     def secrets = [
-        [$class: 'VaultSecret', engineVersion: 1, path: 'secret/rplanx/sentry', secretValues: [
-            [$class: 'VaultSecretValue', envVar: 'V_SENTRY_API_KEY', vaultKey: 'token'],
-            [$class: 'VaultSecretValue', envVar: 'V_SENTRY_ORG', vaultKey: 'organization'],
-            [$class: 'VaultSecretValue', envVar: 'V_SENTRY_PROJECT', vaultKey: 'project']
+        [$class: 'VaultSecret', engineVersion: 1, path: 'secret/rplanx/npmjs.com/rplan-ci', secretValues: [
+            [$class: 'VaultSecretValue', envVar: 'V_USERNAME', vaultKey: 'username']
         ]]
     ]
     wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
-        def TEST_V_SENTRY_API_KEY="${V_SENTRY_API_KEY}"
-        def TEST_V_SENTRY_ORG="${V_SENTRY_ORG}"
-        def TEST_V_SENTRY_PROJECT="${V_SENTRY_PROJECT}"
+        def TEST_USERNAME_1="${env.V_USERNAME}"
+        def TEST_USERNAME_2="${V_USERNAME}"
 
-        sh "echo ${TEST_V_SENTRY_API_KEY}"
-        sh "echo ${TEST_V_SENTRY_ORG}"
-        sh "echo ${TEST_V_SENTRY_PROJECT}"
+        sh "echo ${TEST_USERNAME_1}"
+        sh "echo ${TEST_USERNAME_2}"
+        sh "echo \${TEST_USERNAME_2}"
     }
 
     // vault
