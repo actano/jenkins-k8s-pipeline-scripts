@@ -5,15 +5,19 @@ def createRelease(name) {
     // TODO Integrate after test was successful
     def secrets = [
         [$class: 'VaultSecret', engineVersion: 1, path: 'secret/rplanx/sentry', secretValues: [
-                [$class: 'VaultSecretValue', envVar: 'V_SENTRY_API_KEY', vaultKey: 'token'],
+            [$class: 'VaultSecretValue', envVar: 'V_SENTRY_API_KEY', vaultKey: 'token'],
             [$class: 'VaultSecretValue', envVar: 'V_SENTRY_ORG', vaultKey: 'organization'],
             [$class: 'VaultSecretValue', envVar: 'V_SENTRY_PROJECT', vaultKey: 'project']
         ]]
     ]
     wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
-        sh "echo \${V_SENTRY_API_KEY}"
-        sh "echo \${V_SENTRY_ORG}"
-        sh "echo \${V_SENTRY_PROJECT}"
+        def TEST_V_SENTRY_API_KEY="${env.V_SENTRY_API_KEY}"
+        def TEST_V_SENTRY_ORG="${env.V_SENTRY_ORG}"
+        def TEST_V_SENTRY_PROJECT="${env.V_SENTRY_PROJECT}"
+
+        sh "echo ${TEST_V_SENTRY_API_KEY}"
+        sh "echo ${TEST_V_SENTRY_ORG}"
+        sh "echo ${TEST_V_SENTRY_PROJECT}"
     }
 
     // vault
