@@ -34,5 +34,8 @@ def createRelease(name) {
 
         // upload sourcemaps
         sh "cd npm-sentry && npx sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} files ${SENTRY_RELEASE} upload-sourcemaps ../sourcemaps-files --rewrite"
+
+        // associate release with commits from the GitHub repository
+        sh "cd npm-sentry && npx sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} set-commits ${SENTRY_RELEASE} --auto"
     }
 }
