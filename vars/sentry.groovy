@@ -2,6 +2,20 @@
  * Creates a Sentry release and uploads the sourcemaps
  */
 def createRelease(name) {
+    // TODO Integrate after test was successful
+    def secrets = [
+        [$class: 'VaultSecret', engineVersion: 1, path: 'secret/rplanx/sentry', secretValues: [
+                [$class: 'VaultSecretValue', envVar: 'V_SENTRY_API_KEY', vaultKey: 'token'],
+            [$class: 'VaultSecretValue', envVar: 'V_SENTRY_ORG', vaultKey: 'organization'],
+            [$class: 'VaultSecretValue', envVar: 'V_SENTRY_PROJECT', vaultKey: 'project']
+        ]]
+    ]
+    wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
+        sh "echo ${env.V_SENTRY_API_KEY}"
+        sh "echo ${env.V_SENTRY_ORG}"
+        sh "echo ${env.V_SENTRY_PROJECT}"
+    }
+
     // vault
     // todo get from vault
     def SENTRY_API_KEY="4e6e8ebddbe94465989b3f4efe801a355db70615472549399446e52807b759c5"
@@ -22,12 +36,6 @@ def createRelease(name) {
     sh "docker create --name sourcemaps_data ${IMAGE_NAME}"
     sh "docker cp sourcemaps_data:/opt/actano/rplan/build/client/index.js.map ./sourcemaps-files/index.js.map"
     sh "docker rm sourcemaps_data"
-
-    // TODO Just for testing, remove later
-    sh "pwd"
-    sh "ls -alh"
-    sh "ls -alh npm-sentry"
-    sh "ls -alh sourcemaps-files"
 
     // create release
     sh "cd npm-sentry && npx sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} new ${SENTRY_RELEASE}"
