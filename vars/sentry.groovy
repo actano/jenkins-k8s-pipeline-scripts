@@ -12,18 +12,21 @@ def createRelease(name) {
     def SENTRY_RELEASE="${env.GIT_COMMIT}"
     def IMAGE_NAME="${gitops.imageRef(name)}"
 
+    sh "mkdir -p sourcemaps_files"
+
     // create container and get sourcemaps
     sh "docker create --name sourcemaps_data ${IMAGE_NAME}"
-    sh "docker cp sourcemaps_data:/opt/actano/rplan/build/client/index.js.map ./index.js.map"
+    sh "docker cp sourcemaps_data:/opt/actano/rplan/build/client/index.js.map ./sourcemaps_files/index.js.map"
     sh "docker rm sourcemaps_data"
 
     // TODO Just for testing, remove later
     sh "pwd"
     sh "ls -alh"
+    sh "ls -alh sourcemaps_files"
 
     // create release
     sh "docker run --rm getsentry/sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} new ${SENTRY_RELEASE}"
 
     // upload sourcemaps
-    sh "docker run --rm  -v ${pwd()}/index.js.map:/work/index.js.map getsentry/sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} files ${SENTRY_RELEASE} upload-sourcemaps /work/index.js.map --rewrite"
+    sh "docker run --rm  --mount type=bind,source=${pwd()}/sourcemaps_files,target=/work/sourcemaps_files getsentry/sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} files ${SENTRY_RELEASE} upload-sourcemaps /work/sourcemaps_files --rewrite"
 }
