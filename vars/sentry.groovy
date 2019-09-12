@@ -11,9 +11,9 @@ def createRelease(name) {
         ]]
     ]
     wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
-        sh "echo ${env.V_SENTRY_API_KEY}"
-        sh "echo ${env.V_SENTRY_ORG}"
-        sh "echo ${env.V_SENTRY_PROJECT}"
+        sh "echo $V_SENTRY_API_KEY"
+        sh "echo $V_SENTRY_ORG"
+        sh "echo $V_SENTRY_PROJECT"
     }
 
     // vault
