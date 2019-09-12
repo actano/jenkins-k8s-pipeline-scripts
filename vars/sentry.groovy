@@ -12,28 +12,26 @@ def createRelease(name) {
     def SENTRY_RELEASE="${env.GIT_COMMIT}"
     def IMAGE_NAME="${gitops.imageRef(name)}"
 
-    sh "mkdir -p sourcemaps-upload"
-    sh "cd sourcemaps-upload"
-
     // install sentry
-    sh "npm init -y"
-    sh "npm i @sentry/cli"
-
-    sh "mkdir -p files-to-upload"
+    sh "mkdir -p npm-sentry"
+    sh "cd npm-sentry && npm init -y"
+    sh "cd npm-sentry && npm i @sentry/cli"
 
     // create container and get sourcemaps
+    sh "mkdir -p sourcemaps-files"
     sh "docker create --name sourcemaps_data ${IMAGE_NAME}"
-    sh "docker cp sourcemaps_data:/opt/actano/rplan/build/client/index.js.map ./files-to-upload/index.js.map"
+    sh "docker cp sourcemaps_data:/opt/actano/rplan/build/client/index.js.map ./sourcemaps-files/index.js.map"
     sh "docker rm sourcemaps_data"
 
     // TODO Just for testing, remove later
     sh "pwd"
     sh "ls -alh"
-    sh "ls -alh files-to-upload"
+    sh "ls -alh npm-sentry"
+    sh "ls -alh sourcemaps-files"
 
     // create release
-    sh "npx sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} new ${SENTRY_RELEASE}"
+    sh "cd npm-sentry && npx sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} new ${SENTRY_RELEASE}"
 
     // upload sourcemaps
-    sh "npx sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} files ${SENTRY_RELEASE} upload-sourcemaps ./files-to-upload --rewrite"
+    sh "cd npm-sentry && npx sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} files ${SENTRY_RELEASE} upload-sourcemaps ../sourcemaps-files --rewrite"
 }
