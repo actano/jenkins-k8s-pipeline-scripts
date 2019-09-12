@@ -17,6 +17,10 @@ def createRelease(name) {
     sh "docker cp sourcemaps_data:/opt/actano/rplan/build/client/index.js.map ./index.js.map"
     sh "docker rm sourcemaps_data"
 
+    // TODO Just for testing, remove later
+    sh "pwd"
+    sh "ls -alh"
+
     // create release
     sh "docker run --rm getsentry/sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} new ${SENTRY_RELEASE}"
 
