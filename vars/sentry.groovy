@@ -4,13 +4,13 @@
 def createRelease(name) {
     def secrets = [
         [$class: 'VaultSecret', engineVersion: 1, path: 'secret/rplanx/sentry', secretValues: [
-            [$class: 'VaultSecretValue', envVar: 'V_SENTRY_API_KEY', vaultKey: 'token'],
+            [$class: 'VaultSecretValue', envVar: 'V_SENTRY_AUTH_TOKEN', vaultKey: 'token'],
             [$class: 'VaultSecretValue', envVar: 'V_SENTRY_ORG', vaultKey: 'organization'],
             [$class: 'VaultSecretValue', envVar: 'V_SENTRY_PROJECT', vaultKey: 'project']
         ]]
     ]
     wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
-        def SENTRY_API_KEY="${env.V_SENTRY_API_KEY}"
+        def SENTRY_AUTH_TOKEN="${env.V_SENTRY_AUTH_TOKEN}"
         def SENTRY_ORG="${env.V_SENTRY_ORG}"
         def SENTRY_PROJECT="${env.V_SENTRY_PROJECT}"
 
@@ -30,12 +30,12 @@ def createRelease(name) {
         sh "docker rm sourcemaps_data"
 
         // create release
-        sh "cd npm-sentry && npx sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} new ${SENTRY_RELEASE}"
+        sh "cd npm-sentry && npx sentry-cli --auth-token=${SENTRY_AUTH_TOKEN} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} new ${SENTRY_RELEASE}"
 
         // upload sourcemaps
-        sh "cd npm-sentry && npx sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} files ${SENTRY_RELEASE} upload-sourcemaps ../sourcemaps-files --rewrite"
+        sh "cd npm-sentry && npx sentry-cli --auth-token=${SENTRY_AUTH_TOKEN} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} files ${SENTRY_RELEASE} upload-sourcemaps ../sourcemaps-files --rewrite"
 
         // associate release with commits from the GitHub repository
-        sh "cd npm-sentry && npx sentry-cli --auth-token=${SENTRY_API_KEY} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} set-commits ${SENTRY_RELEASE} --auto"
+        sh "cd npm-sentry && npx sentry-cli --auth-token=${SENTRY_AUTH_TOKEN} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} set-commits ${SENTRY_RELEASE} --auto"
     }
 }
