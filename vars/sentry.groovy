@@ -4,17 +4,12 @@
 def createRelease(name) {
     def secrets = [
         [$class: 'VaultSecret', engineVersion: 1, path: 'secret/rplanx/sentry', secretValues: [
-            [$class: 'VaultSecretValue', envVar: 'V_SENTRY_AUTH_TOKEN', vaultKey: 'token'],
-            [$class: 'VaultSecretValue', envVar: 'V_SENTRY_ORG', vaultKey: 'organization'],
-            [$class: 'VaultSecretValue', envVar: 'V_SENTRY_PROJECT', vaultKey: 'project']
+            [$class: 'VaultSecretValue', envVar: 'SENTRY_AUTH_TOKEN', vaultKey: 'token'],
+            [$class: 'VaultSecretValue', envVar: 'SENTRY_ORG', vaultKey: 'organization'],
+            [$class: 'VaultSecretValue', envVar: 'SENTRY_PROJECT', vaultKey: 'project']
         ]]
     ]
     wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
-        def SENTRY_AUTH_TOKEN="${env.V_SENTRY_AUTH_TOKEN}"
-        def SENTRY_ORG="${env.V_SENTRY_ORG}"
-        def SENTRY_PROJECT="${env.V_SENTRY_PROJECT}"
-
-        // local
         def SENTRY_RELEASE="${env.GIT_COMMIT}"
         def IMAGE_NAME="${gitops.imageRef(name)}"
 
