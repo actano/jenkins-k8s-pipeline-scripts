@@ -22,6 +22,7 @@ def createRelease(name) {
         sh "mkdir -p sourcemaps-files"
         sh "docker create --name sourcemaps_data ${IMAGE_NAME}"
         sh "docker cp sourcemaps_data:/opt/actano/rplan/build/client/index.js.map ./sourcemaps-files/index.js.map"
+        sh "docker cp sourcemaps_data:/opt/actano/rplan/build/client/index.js ./sourcemaps-files/index.js"
         sh "docker rm sourcemaps_data"
 
         // create release
