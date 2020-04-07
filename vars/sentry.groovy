@@ -21,9 +21,11 @@ def createRelease(name) {
         // create container and get sourcemaps
         sh "mkdir -p sourcemaps-files"
         sh "docker create --name sourcemaps_data ${IMAGE_NAME}"
-        sh "docker cp sourcemaps_data:/opt/actano/rplan/build/client/index.js.map ./sourcemaps-files/index.js.map"
-        sh "docker cp sourcemaps_data:/opt/actano/rplan/build/client/index.js ./sourcemaps-files/index.js"
+        sh "docker cp sourcemaps_data:/opt/actano/rplan/build/client ./sourcemaps-files"
         sh "docker rm sourcemaps_data"
+        sh "mv ./sourcemaps-files/client/*.js ./sourcemaps-files"
+        sh "mv ./sourcemaps-files/client/*.map ./sourcemaps-files"
+        sh "rm -rf ./sourcemaps-files/client"
 
         // create release
         sh "cd npm-sentry && npx sentry-cli --auth-token=${SENTRY_AUTH_TOKEN} releases --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} new ${SENTRY_RELEASE}"
