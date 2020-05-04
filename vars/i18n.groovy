@@ -5,6 +5,6 @@ def deployi18nScripts(webclientName, folderPath="./static/i18n", bucketPath="gs:
   if (versionExits != 0) {
     sh "gsutil cp -r ${folderPath} ${fullPath}"
   } else {
-    error("Build failed as the translations already exist in the cdn bucket")
+    error("Build failed as the translations for this already exist in the cdn bucket")
   }
 }
