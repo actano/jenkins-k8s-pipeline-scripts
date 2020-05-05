@@ -1,5 +1,5 @@
 def deployi18nScripts(webclientName, folderPath="./static/i18n", bucketPath="gs://allex-cdn/i18n") {
-  def fetchVersionBash = "\$(yarn info --version)"
+  def fetchVersionBash = "\$(cat ./package.json | jq -r '.version')"
   def fullPath = "${bucketPath}/${webclientName}/${fetchVersionBash}"
   def versionExits = sh script:"gsutil ls ${fullPath}", returnStatus:true
   if (versionExits != 0) {
