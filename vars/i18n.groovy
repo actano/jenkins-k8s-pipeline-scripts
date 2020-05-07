@@ -1,6 +1,5 @@
-def deployi18nScripts(webclientName, folderPath="./static/i18n", bucketPath="gs://allex-cdn/i18n") {
-  def fetchVersionBash = "\$(cat ./package.json | jq -r '.version')"
-  def fullPath = "${bucketPath}/${webclientName}/${fetchVersionBash}"
+def deployi18nScripts(webclientName, version="\$(cat ./package.json | jq -r '.version')", folderPath="./static/i18n", bucketPath="gs://allex-cdn/i18n") {
+  def fullPath = "${bucketPath}/${webclientName}/${version}"
   def versionExits = sh script:"gsutil ls ${fullPath}", returnStatus:true
   if (versionExits != 0) {
     sh "gsutil cp -r ${folderPath} ${fullPath}"
