@@ -1,6 +1,6 @@
-def imageRef(name) {
+def imageRef(name, prefix="${env.BRANCH_NAME}") {
   String imageName = "${env.DOCKER_REGISTRY}/${env.GOOGLE_PROJECT}/${name}"
-  String tag = "${env.BRANCH_NAME}-${env.GIT_COMMIT}"
+  String tag = "${prefix}-${env.GIT_COMMIT}"
   return "${imageName}:${tag}"
 }
 
