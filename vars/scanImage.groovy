@@ -7,5 +7,5 @@ def call(imageName) {
 }
 
 def archive() {
-    archiveArtifacts artifacts: 'scan-*.txt'
+    archiveArtifacts artifacts: 'scan-*.txt', allowEmptyArchive: true, onlyIfSuccessful: true
 }
