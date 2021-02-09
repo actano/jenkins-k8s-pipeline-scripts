@@ -3,7 +3,7 @@ def call(imageName) {
     String tag = gitops.imageTag()
     String scanResultFile = "scan-${imageName}-${tag}.txt"
     sh "grype \"${img}\" 2>&1 | tee \"${scanResultFile}\""
-    sh "egrep -o \"Critical|High\" \"${scanResultFile}\" | sort | uniq -c | tee -a \"${scanResultFile}\"
+    sh "egrep -o \"Critical|High\" \"${scanResultFile}\" | sort | uniq -c | tee -a \"${scanResultFile}\""
     sh "gsutil cp \"${scanResultFile}\" \"gs://allex-image-scan-results/${imageName}/${scanResultFile}\""
 }
 
