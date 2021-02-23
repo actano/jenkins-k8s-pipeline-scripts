@@ -1,4 +1,4 @@
-def withPactBrokerCredentials(secretPath = "secret/rplanx/gke-dev/pact-broker", Closure body) {
+def withPactBrokerCredentials(secretPath = "secret/allex/gke-development/pact-broker/login", Closure body) {
   def secrets = [
     [$class: 'VaultSecret', engineVersion: 1, path: secretPath, secretValues: [
       [$class: 'VaultSecretValue', envVar: 'PACT_BROKER_URL', vaultKey: 'url'],
