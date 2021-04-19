@@ -19,7 +19,8 @@ def buildImage(name, directory=".", buildArgs = "") {
   sh "gcloud config get-value artifacts/location"
   sh "gcloud auth configure-docker europe-west3-docker.pkg.dev"
   sh "gcloud config list"
-  sh "docker build -t ${imageRef(name)} --build-arg GIT_COMMIT=${env.GIT_COMMIT} ${buildArgs} ${directory}"
+  //sh "docker build -t ${imageRef(name)} --build-arg GIT_COMMIT=${env.GIT_COMMIT} ${buildArgs} ${directory}"
+  sh "docker build -t ${imageRefArtifactRepo(name)} --build-arg GIT_COMMIT=${env.GIT_COMMIT} ${buildArgs} ${directory}"
 }
 
 def pushImage(name) {
